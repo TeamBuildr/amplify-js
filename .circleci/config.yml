@@ -25,7 +25,7 @@ executors:
 
   js-test-executor:
     docker:
-      - image: cypress/included:9.5.2
+      - image: cypress/included:9.5.3
       - image: verdaccio/verdaccio
         auth:
           username: $DOCKERHUB_USERNAME
