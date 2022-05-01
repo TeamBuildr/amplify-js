@@ -1,6 +1,6 @@
 {
-  "name": "@aws-amplify/pushnotification",
-  "version": "4.3.17",
+  "name": "@teambuildr/pushnotification",
+  "version": "4.3.19",
   "description": "Push notifications category of aws-amplify",
   "main": "./lib/index.js",
   "module": "./lib/index.js",
@@ -20,7 +20,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/aws-amplify/amplify-js.git"
+    "url": "https://github.com/teambuildr/amplify-js.git"
   },
   "author": "Amazon Web Services",
   "license": "Apache-2.0",
