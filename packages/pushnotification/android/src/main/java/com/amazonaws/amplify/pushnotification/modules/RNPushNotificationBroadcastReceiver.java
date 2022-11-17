@@ -19,6 +19,8 @@ import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Bundle;
 import android.util.Log;
 
 import com.facebook.react.ReactApplication;
@@ -46,10 +48,15 @@ public class RNPushNotificationBroadcastReceiver extends BroadcastReceiver {
         }
     }
 
-    private void openApp(Context context) {
+    private void openApp(Context context, Bundle notification) {
         Class intentClass = getMainActivityClass(context);
-        Intent launchIntent = new Intent(context, intentClass);
-        if (launchIntent == null) {
+        String deeplink = notification.getString("pinpoint.deeplink");
+        Boolean hasDeeplink = deeplink != null;
+
+        // if pinpoint data has a deeplink, we use an ACTION_VIEW intent (https://developer.android.com/reference/android/content/Intent#ACTION_VIEW)
+        // using this type of Intent is what native android Linking.getInitialUrl expects (https://github.com/facebook/react-native/blob/v0.64.3/ReactAndroid/src/main/java/com/facebook/react/modules/intent/IntentModule.java#L59)
+        // this allows us to handle deep linking on cold push
+        Intent launchIntent = hasDeeplink ? new Intent(Intent.ACTION_VIEW, Uri.parse(deeplink)) : new Intent(context, intentClass);        if (launchIntent == null) {
             Log.e(LOG_TAG, "Couldn't get app launch intent for campaign notification.");
             return;
         }
@@ -70,6 +77,6 @@ public class RNPushNotificationBroadcastReceiver extends BroadcastReceiver {
         RNPushNotificationJsDelivery jsDelivery = new RNPushNotificationJsDelivery((ReactApplicationContext) reactContext);
         jsDelivery.emitNotificationOpened(intent.getBundleExtra("notification"));
 
-        openApp(context);
+        openApp(context, intent.getBundleExtra("notification"));
     }
 }
